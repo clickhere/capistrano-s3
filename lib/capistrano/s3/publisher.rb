@@ -49,7 +49,7 @@ module Capistrano
       end
 
       def self.clear!(region, key, secret, bucket)
-        s3 = self.establish_s3_connection!(region, key, secret)
+        s3 = self.establish_s3_client_connection!(region, key, secret)
         s3.buckets[bucket].clear!
 
         FileUtils.rm(LAST_PUBLISHED_FILE)
