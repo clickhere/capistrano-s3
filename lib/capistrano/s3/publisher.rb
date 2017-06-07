@@ -50,10 +50,15 @@ module Capistrano
 
       def self.clear!(region, key, secret, bucket)
         s3 = self.establish_s3_client_connection!(region, key, secret)
-        s3.buckets[bucket].clear!
+        Aws::S3::Bucket.new(bucket, client: s3).clear!
 
-        FileUtils.rm(LAST_PUBLISHED_FILE)
-        FileUtils.rm(LAST_INVALIDATION_FILE)
+        if File.exist?(LAST_PUBLISHED_FILE)
+          FileUtils.rm(LAST_PUBLISHED_FILE)
+        end
+
+        if File.exist?(LAST_INVALIDATION_FILE)
+          FileUtils.rm(LAST_INVALIDATION_FILE)
+        end
       end
 
       def self.check_invalidation(region, key, secret, distribution_id)
